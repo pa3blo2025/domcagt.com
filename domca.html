@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM'CA TI Support S.A.</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        :root 
+        {
+            --primary-color: #0d47a1; /* Azul oscuro */
+            --secondary-color: #f5f8fa; /* Gris muy claro */
+            --accent-color: #29b6f6; /* Azul claro acento */
+            --success-color: #66bb6a; /* Verde */
+            --text-color: #263238; /* Gris casi negro */
+            --light-text-color: #546e7a; /* Gris medio */
+            --white: #ffffff;
+            --gradient-1: linear-gradient(135deg, #1e3a8a 0%, #0d47a1 100%);
+            --gradient-2: linear-gradient(135deg, #29b6f6 0%, #0089d3 100%);
+            --gradient-3: linear-gradient(135deg, #0d47a1 0%, #29b6f6 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+        }
+
+        /* --- Animaciones Canva-style --- */
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes scaleIn {
+            from { 
+                opacity: 0; 
+                transform: scale(0.9); 
+            }
+            to { 
+                opacity: 1; 
+                transform: scale(1); 
+            }
+        }
+
+        @keyframes slideInLeft {
+            from { 
+                opacity: 0; 
+                transform: translateX(-50px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-fade-up { animation: fadeInUp 0.8s ease-out; }
+        .animate-scale-in { animation: scaleIn 0.6s ease-out; }
+        .animate-slide-left { animation: slideInLeft 0.8s ease-out; }
+        .float-animation { animation: float 3s ease-in-out infinite; }
+
+        /* --- Header Canva-style --- */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(13, 71, 161, 0.1);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .logo-link {
+            transition: transform 0.3s ease;
+        }
+        .logo-link:hover {
+            transform: scale(1.05);
+        }
+        .logo-img {
+            height: 60px; /* Ajuste para un logo mediano */
+            width: auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(13, 71, 161, 0.1);
+            color: var(--primary-color);
+        }
+
+        .nav-cta {
+            background: var(--gradient-1) !important;
+            color: white !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 25px !important;
+            font-weight: 600 !important;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* --- Hero Section Canva-style --- */
+        .hero {
+            background: var(--gradient-1);
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff08" points="0,0 1000,200 1000,0"/><polygon fill="%23ffffff05" points="0,1000 1000,800 1000,1000"/></svg>') no-repeat center center;
+            background-size: cover;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content { color: white; }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-lg);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .hero-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* --- Secciones con estilo Canva --- */
+        .section {
+            padding: 6rem 5%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: rgba(13, 71, 161, 0.1);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--light-text-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Estilo para la imagen de identidad corporativa */
+        .corporate-identity-img {
+            display: block;
+            max-width: 800px; /* Tamaño más pequeño */
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            margin: 0 auto 4rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra más elegante */
+        }
+
+        /* --- Cards de Servicios Canva-style --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(13, 71, 161, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .service-card:nth-child(1)::before { background: var(--gradient-1); }
+        .service-card:nth-child(2)::before { background: var(--gradient-2); }
+        .service-card:nth-child(3)::before { background: var(--gradient-3); }
+        .service-card:nth-child(4)::before { background: linear-gradient(135deg, #ff9800 0%, #f44336 100%); }
+        .service-card:nth-child(5)::before { background: linear-gradient(135deg, #673ab7 0%, #3f51b5 100%); }
+
+        .service-card:nth-child(1) .service-icon { background: rgba(13, 71, 161, 0.1); }
+        .service-card:nth-child(2) .service-icon { background: rgba(41, 182, 246, 0.1); }
+        .service-card:nth-child(3) .service-icon { background: rgba(13, 71, 161, 0.1); }
+        .service-card:nth-child(4) .service-icon { background: rgba(255, 152, 0, 0.1); }
+        .service-card:nth-child(5) .service-icon { background: rgba(103, 58, 183, 0.1); }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .service-description {
+            color: var(--light-text-color);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .service-link:hover { gap: 1rem; }
+
+        /* --- Estadísticas Canva-style --- */
+        .stats-section {
+            background: var(--gradient-1);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff08" points="0,0 1000,200 1000,0"/><polygon fill="%23ffffff05" points="0,1000 1000,800 1000,1000"/></svg>') no-repeat center center;
+            background-size: cover;
+        }
+
+        .stats-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        /* --- About Section Canva-style --- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-content h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .about-content p {
+            color: var(--light-text-color);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--success-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .about-visual {
+            background: var(--gradient-2);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23ffffff20"/></svg>') repeat;
+            animation: float 20s linear infinite;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .about-stat { text-align: center; }
+
+        .about-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .about-stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* --- Secciones de Soluciones/Tecnologías */
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .solution-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(13, 71, 161, 0.1);
+        }
+
+        .solution-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .solution-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .solution-card li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f4f7;
+            font-weight: 500;
+            color: var(--light-text-color);
+        }
+        
+        .solution-card li:last-child { border-bottom: none; }
+
+
+        /* --- Footer Canva-style --- */
+        .footer {
+            background: var(--text-color);
+            color: white;
+            padding: 4rem 5% 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover { color: var(--accent-color); }
+        
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: scale(1.1);
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* --- Form Styling --- */
+        #contactForm input:focus,
+        #contactForm select:focus,
+        #contactForm textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.1);
+        }
+
+        #contactForm button {
+            background: var(--gradient-3);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        #contactForm button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .form-success {
+            background: rgba(102, 187, 106, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(102, 187, 106, 0.2);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 3%;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .section {
+                padding: 4rem 3%;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-grid, .solutions-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            #contacto .container > div {
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+            }
+
+            #contactForm > div:first-child {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* --- Animaciones de scroll --- */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Cookie Consent Banner --- */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(38, 50, 56, 0.9);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            z-index: 1001;
+            transform: translateY(100%);
+            transition: transform 0.5s ease-in-out;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .cookie-banner.show {
+            transform: translateY(0);
+        }
+
+        .cookie-banner p {
+            margin: 0;
+            flex: 1;
+            line-height: 1.6;
+        }
+
+        .cookie-banner a {
+            color: var(--accent-color);
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+
+        .cookie-banner a:hover {
+            color: white;
+        }
+
+        .cookie-banner button {
+            background: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .cookie-banner button:hover {
+            background: #0089d3;
+        }
+        
+        /* --- Sección de Testimonios --- */
+        .testimonials-carousel-container {
+            overflow-x: hidden;
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .testimonials-carousel {
+            display: flex;
+            gap: 2rem;
+            padding: 1rem 0;
+            animation: scrollTestimonials 25s linear infinite;
+            animation-play-state: running;
+        }
+
+        @keyframes scrollTestimonials {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-33.33% - 2rem)); }
+        }
+
+        .testimonials-carousel-container:hover .testimonials-carousel {
+            animation-play-state: paused;
+        }
+
+        .testimonial-card {
+            background: white;
+            min-width: calc(33.33% - 1.33rem);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(13, 71, 161, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .testimonial-card .client-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 1.5rem;
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover .client-logo {
+            filter: none;
+            opacity: 1;
+        }
+
+        .testimonial-quote {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--light-text-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-author {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 1.5rem;
+            text-align: center;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .author-title {
+            font-size: 0.9rem;
+            color: var(--light-text-color);
+        }
+
+        /* --- Sección de FAQ --- */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(13, 71, 161, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        .faq-question h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .faq-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 2rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            background: #fcfdfe;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px; /* Ajustar según el contenido */
+            padding: 1rem 2rem 2rem;
+        }
+
+        .faq-answer p {
+            color: var(--light-text-color);
+        }
+
+        /* --- Sección de Carreras --- */
+        .job-openings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(13, 71, 161, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .job-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .job-card p {
+            color: var(--light-text-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Estilos para el Dropdown (Menú desplegable) */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: transparent;
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .dropbtn:hover {
+            background-color: rgba(13, 71, 161, 0.1);
+            color: var(--primary-color);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 8px;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 10px;
+            padding: 10px 0;
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Estilos para el Chat */
+        .chat-menu-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1002;
+            width: 350px;
+            max-height: 500px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: var(--shadow-xl);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chat-menu-container.active {
+            display: flex;
+        }
+
+        .chat-menu-header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .chat-logo {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+        }
+
+        .chat-info {
+            flex-grow: 1;
+        }
+
+        .chat-company {
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .chat-response-time {
+            font-size: 0.8rem;
+            color: var(--light-text-color);
+            margin: 0;
+        }
+
+        .chat-window {
+            padding: 1.5rem;
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-message-bubble {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .chat-logo-sm {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .chat-message {
+            background: #eef1f6;
+            border-radius: 18px;
+            padding: 1rem;
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-color);
+        }
+
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .chat-input-area button {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            margin-left: 10px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .chat-input-area button:hover {
+            transform: translateX(3px);
+        }
+
+        .chat-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-xl);
+            z-index: 1003;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="logo-link" aria-label="Volver a la página de inicio">
+            <img src="logo.png" alt="Logotipo de DOM'CA TI Support S.A." class="logo-img">
+        </a>
+        <nav class="nav-menu" aria-label="Navegación principal">
+            <a href="#inicio">Inicio</a>
+            <div class="dropdown">
+                <a href="#soluciones" class="dropbtn">Soluciones</a>
+                <div class="dropdown-content">
+                    <a href="#">Suite</a>
+                    <a href="#soluciones">Desarrollo</a>
+                    <a href="#">Gestión</a>
+                    <a href="#soluciones">Soporte</a>
+                    <a href="#soluciones">Seguridad</a>
+                </div>
+            </div>
+            <a href="#nosotros">Nosotros</a>
+            <a href="#contacto">Contacto</a>
+            <a href="#contacto" class="nav-cta">Comienza Ahora</a>
+        </nav>
+    </header>
+
+    <section id="inicio" class="hero">
+        <div class="hero-container">
+            <div class="hero-content animate-fade-up">
+                <div class="hero-badge">💻 Innovación y Soporte Tecnológico</div>
+                <h1 class="hero-title">DOM'CA TI Support S.A.</h1>
+                <p class="hero-subtitle">Tu socio tecnológico estratégico. Brindamos soluciones de TI a la medida para impulsar el crecimiento y la eficiencia de tu negocio.</p>
+                <div class="hero-buttons">
+                    <a href="#soluciones" class="btn-primary">Descubre Nuestras Soluciones</a>
+                    <a href="#contacto" class="btn-secondary">Agenda una Consultoría</a>
+                </div>
+            </div>
+            <div class="hero-visual animate-scale-in">
+                <div class="hero-card float-animation">
+                    <span class="hero-icon" aria-hidden="true">💡</span>
+                    <h3>Soluciones a la Medida</h3>
+                    <p>Para cada desafío</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <section id="soluciones" class="section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-badge">Nuestros Servicios</div>
+                <h2 class="section-title">Soluciones Tecnológicas a tu Alcance</h2>
+                <p class="section-subtitle">Ofrecemos una gama completa de servicios para optimizar tus operaciones y asegurar tu éxito en la era digital.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon" aria-hidden="true">💻</div>
+                    <h3 class="service-title">Desarrollo de Software a Medida</h3>
+                    <p class="service-description">Creamos aplicaciones y sistemas personalizados que se ajustan perfectamente a los flujos de trabajo de tu empresa.</p>
+                    <a href="#contacto" class="service-link">Solicitar información →</a>
+                </div>
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon" aria-hidden="true">🔒</div>
+                    <h3 class="service-title">Ciberseguridad y Protección de Datos</h3>
+                    <p class="service-description">Protegemos tu infraestructura y tus datos críticos con soluciones de seguridad de vanguardia y monitoreo 24/7.</p>
+                    <a href="#contacto" class="service-link">Solicitar información →</a>
+                </div>
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon" aria-hidden="true">📱</div>
+                    <h3 class="service-title">Desarrollo de Apps Móviles</h3>
+                    <p class="service-description">Diseñamos y desarrollamos aplicaciones móviles intuitivas para iOS y Android que capturan la atención de tus clientes.</p>
+                    <a href="#contacto" class="service-link">Solicitar información →</a>
+                </div>
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon" aria-hidden="true">🚀</div>
+                    <h3 class="service-title">Licenciamiento de Software y SaaS</h3>
+                    <p class="service-description">Gestión de licencias y consultoría para software especializado, incluyendo soluciones ERP, CRM y de productividad.</p>
+                    <a href="#contacto" class="service-link">Solicitar información →</a>
+                </div>
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon" aria-hidden="true">🛠️</div>
+                    <h3 class="service-title">Soporte Técnico y Mantenimiento</h3>
+                    <p class="service-description">Soporte proactivo y reactivo para garantizar que tu hardware y software funcionen sin interrupciones.</p>
+                    <a href="#contacto" class="service-link">Solicitar información →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+    
+    <section id="eset" class="section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content animate-on-scroll">
+                    <div class="section-badge">Socio Autorizado de ESET</div>
+                    <h2 class="section-title" style="text-align: left;">ESET Partner Lead</h2>
+                    <p>En DOM'CA TI Support, S.A., nos enorgullece ser un socio autorizado de ESET, líder mundial en ciberseguridad. Esta asociación estratégica nos permite ofrecer a nuestros clientes las soluciones de seguridad más avanzadas y fiables del mercado.</p>
+                    <p>Como parte del Programa de Partners de ESET, tenemos acceso a las últimas tecnologías, soporte técnico especializado y programas de capacitación continua. Esto nos asegura que nuestro equipo esté siempre actualizado, listo para proporcionarle el mejor servicio de instalación, configuración y soporte técnico para todos los productos ESET.</p>
+                    
+                    <h3>Protege tu mundo digital con ESET y DOM'CA</h3>
+                    <p>ESET ofrece un catálogo completo de soluciones diseñadas para proteger todo, desde dispositivos personales hasta la infraestructura de grandes corporaciones. Al elegirnos, no solo adquiere un producto de ciberseguridad de clase mundial, sino también la experiencia y el compromiso de un equipo de expertos que garantiza que su entorno digital esté seguro.</p>
+                    
+                    <h3>Productos que ofrecemos:</h3>
+                    <ul class="features-list">
+                        <li>ESET Home Security Essential, Standard y Premium: Protección completa para su vida digital en el hogar.</li>
+                        <li>ESET NOD32 Antivirus: La seguridad básica y esencial que su PC necesita.</li>
+                        <li>ESET Internet Security: Una solución todo en uno para navegar, comprar y hacer operaciones bancarias en línea de forma segura.</li>
+                        <li>ESET Smart Security Premium: La protección más completa para su PC, con un gestor de contraseñas y cifrado de datos.</li>
+                        <li>ESET Endpoint Security: Seguridad robusta para empresas, con protección avanzada para endpoints, servidores de archivos y correo.</li>
+                        <li>ESET PROTECT: Una plataforma de gestión centralizada que permite administrar todas las soluciones de seguridad de su empresa de forma fácil y eficiente.</li>
+                    </ul>
+                    
+                    <h3>¿Por qué elegirnos como su socio de ciberseguridad?</h3>
+                    <p>Elegir a DOM'CA TI Support, S.A. significa que usted se beneficia de nuestra experiencia, servicio de alta calidad y una atención personalizada. Confíe en nosotros para proteger su información valiosa y mantener su entorno digital seguro y productivo.</p>
+                </div>
+                <div class="about-visual animate-scale-in">
+                    <img src="eset_partner_lead.png" alt="Socio Autorizado de ESET" style="max-width: 100%; height: auto; border-radius: 20px; box-shadow: var(--shadow-lg);">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <section id="nosotros" class="section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-badge">Acerca de DOM'CA TI Support</div>
+                <h2 class="section-title">Nuestra Esencia</h2>
+                <p class="section-subtitle">Enfocados en la satisfacción del cliente y en el servicio de calidad.</p>
+            </div>
+            
+            <img src="identidadcorporativa.jpg" alt="Identidad corporativa de DOM'CA TI Support S.A." class="corporate-identity-img animate-on-scroll">
+
+            <div class="about-content animate-on-scroll">
+                <h3>Sobre Nosotros</h3>
+                <p>Somos una empresa de servicios informáticos, formada por un grupo de profesionales. Contamos con amplia experiencia y conocimiento en la implantación de diferentes soluciones en el ámbito de las nuevas tecnologías informáticas (TI).</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-content animate-on-scroll">
+                    <h3>Compromiso y Valores</h3>
+                    <p>Nuestros valores se centran en reforzar las relaciones con nuestros clientes habituales y establecer nuevas relaciones. Lo logramos a través del compromiso constante, tratando de ofrecer siempre excelencia en la prestación de nuestros servicios y en la consecución de proyectos. Estamos totalmente comprometidos con nuestros clientes y buscamos apoyar y colaborar en sus proyectos de TI para alcanzar el éxito. Su éxito también es el nuestro, por ende somos la mejor opción.</p>
+                </div>
+                <div class="about-visual animate-scale-in">
+                    <div class="about-stats">
+                        <div class="about-stat">
+                            <span class="about-stat-number">🎯</span>
+                            <div class="about-stat-label">Precisión</div>
+                        </div>
+                        <div class="about-stat">
+                            <span class="about-stat-number">📈</span>
+                            <div class="about-stat-label">Crecimiento</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="about-grid">
+                <div class="about-visual animate-scale-in">
+                    <div class="about-stats">
+                        <div class="about-stat">
+                            <span class="about-stat-number">💡</span>
+                            <div class="about-stat-label">Innovación</div>
+                        </div>
+                        <div class="about-stat">
+                            <span class="about-stat-number">🛡️</span>
+                            <div class="about-stat-label">Seguridad</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-content animate-on-scroll">
+                    <h3>Especialización y Experiencia</h3>
+                    <p>El personal de nuestra empresa está altamente cualificado y especializado en sus correspondientes áreas. Cada uno de nosotros está capacitado para poder llevar a cabo con éxito cualquier tipo de proyecto que se le encomiende. Estamos en constante formación y certificaciones. Desde 2006, llevamos más de 20 años al servicio de nuestros clientes. Tenemos clientes en todos los sectores, con diferentes necesidades y proyectos; todos llevados a cabo con toda la ilusión e implicación que siempre ponemos en nuestros retos diarios.</p>
+                </div>
+            </div>
+            <br>
+            <div class="about-content animate-on-scroll">
+                <h3>Certificaciones Microsoft</h3>
+                <p>Nuestro equipo técnico está debidamente certificado de acuerdo con los requisitos que Microsoft exige a sus Partners. Esto nos convierte en un Partner especializado y completamente preparado para implantar las soluciones cloud de Microsoft. Recientemente hemos adquirido las nuevas competencias de Microsoft: </p>
+                <ul>
+                    <li>· Cloud Platform</li>
+                    <li>· Datacenter Small and Midmarket Solutions</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <section id="politicas" class="section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-badge">Políticas de Calidad</div>
+                <h2 class="section-title">Garantizando la Excelencia</h2>
+                <p class="section-subtitle">Nuestras políticas aseguran la calidad y la satisfacción del cliente en cada etapa de nuestro servicio.</p>
+            </div>
+            <div class="about-content animate-on-scroll">
+                <p>Nuestra política de calidad se enfoca en asegurar un alto nivel de servicio, cumpliendo con los siguientes puntos:</p>
+                <p>
+                    <ul>
+                        <li><b>Servicio al Cliente:</b> Brindamos servicios que satisfacen las necesidades de nuestros clientes, ofreciendo un trato amable y servicial.</li>
+                        <li><b>Rapidez y Eficiencia:</b> Buscamos resolver los problemas de manera rápida y efectiva, manteniendo la eficiencia en cada proceso.</li>
+                        <li><b>Manejo de Información:</b> Priorizamos el manejo adecuado de la información, asegurando su protección y confidencialidad.</li>
+                        <li><b>Honestidad:</b> Actuamos con transparencia y honradez en todas nuestras interacciones y transacciones.</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+    
+    <section class="stats-section section">
+        <div class="container stats-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-badge" style="background: rgba(255, 255, 255, 0.2); color: white;">Nuestros Resultados</div>
+                <h2 class="section-title" style="color: white;">Impacto y Credibilidad</h2>
+                <p class="section-subtitle" style="color: rgba(255, 255, 255, 0.8);">Trabajamos con pasión para ofrecer soluciones que generan resultados tangibles y duraderos.</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card animate-on-scroll">
+                    <span class="stat-number" data-target="250">0</span>
+                    <div class="stat-label">Proyectos Completados</div>
+                </div>
+                <div class="stat-card animate-on-scroll">
+                    <span class="stat-number" data-target="20">0</span>
+                    <div class="stat-label">Años de Innovación</div>
+                </div>
+                <div class="stat-card animate-on-scroll">
+                    <span class="stat-number" data-target="98">0</span>
+                    <div class="stat-label">% de Satisfacción</div>
+                </div>
+                <div class="stat-card animate-on-scroll">
+                    <span class="stat-number" data-target="50">0</span>
+                    <div class="stat-label">Clientes Globales</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <section id="testimonios" class="section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-badge">Lo que Dicen Nuestros Clientes</div>
+                <h2 class="section-title">Clientes Satisfechos. Soluciones Reales.</h2>
+                <p class="section-subtitle">Nuestra prioridad es el éxito de tu negocio. Escucha lo que nuestros socios estratégicos tienen que decir.</p>
+            </div>
+            <div class="testimonials-carousel-container animate-on-scroll">
+                <div class="testimonials-carousel">
+                    <div class="testimonial-card">
+                        <img src="logo.png" alt="Logo de la Empresa A" class="client-logo">
+                        <p class="testimonial-quote">"El soporte técnico de DOM'CA TI es incomparable. Han resuelto nuestros problemas de red de manera rápida y eficiente, permitiendo que nuestra operación continúe sin interrupciones."</p>
+                        <div class="testimonial-author">
+                            <p class="author-name">Juan Pérez</p>
+                            <p class="author-title">Gerente de TI, Empresa A</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="logo.png" alt="Logo de la Empresa B" class="client-logo">
+                        <p class="testimonial-quote">"Su solución de ciberseguridad nos ha dado tranquilidad. Sabemos que nuestra información está segura y protegida contra cualquier amenaza."</p>
+                        <div class="testimonial-author">
+                            <p class="author-name">María Rodríguez</p>
+                            <p class="author-title">Directora de Operaciones, Empresa B</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="logo.png" alt="Logo de la Empresa C" class="client-logo">
+                        <p class="testimonial-quote">"El desarrollo a medida que hicieron para nosotros ha optimizado nuestros procesos internos de forma significativa. Un equipo muy profesional y comprometido."</p>
+                        <div class="testimonial-author">
+                            <p class="author-name">Carlos Sánchez</p>
+                            <p class="author-title">CEO, Empresa C</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="logo.png" alt="Logo de la Empresa A" class="client-logo">
+                        <p class="testimonial-quote">"El soporte técnico de DOM'CA TI es incomparable. Han resuelto nuestros problemas de red de manera rápida y eficiente, permitiendo que nuestra operación continúe sin interrupciones."</p>
+                        <div class="testimonial-author">
+                            <p class="author-name">Juan Pérez</p>
+                            <p class="author-title">Gerente de TI, Empresa A</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="logo.png" alt="Logo de la Empresa B" class="client-logo">
+                        <p class="testimonial-quote">"Su solución de ciberseguridad nos ha dado tranquilidad. Sabemos que nuestra información está segura y protegida contra cualquier amenaza."</p>
+                        <div class="testimonial-author">
+                            <p class="author-name">María Rodríguez</p>
+                            <p class="author-title">Directora de Operaciones, Empresa B</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="logo.png" alt="Logo de la Empresa C" class="client-logo">
+                        <p class="testimonial-quote">"El desarrollo a medida que hicieron para nosotros ha optimizado nuestros procesos internos de forma significativa. Un equipo muy profesional y comprometido."</p>
+                        <div class="testimonial-author">
+                            <p class="author-name">Carlos Sánchez</p>
+                            <p class="author-title">CEO, Empresa C</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <section id="contacto" class="section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-badge">Contáctanos</div>
+                <h2 class="section-title">Hablemos de tu Proyecto</h2>
+                <p class="section-subtitle">Estamos listos para escucharte y ofrecerte la solución perfecta para tu negocio. Rellena el formulario o contáctanos por otros medios.</p>
+            </div>
+            
+            <div class="about-grid" style="grid-template-columns: 1fr 2fr; gap: 4rem;">
+                <div class="about-content animate-on-scroll">
+                    <h3>Información de Contacto</h3>
+                    <p><b>Dirección:</b> Colonia Hermano Pedro, 3a Avenida 28-88, Zona 25, Guatemala, Guatemala, Kilómetro 14.5 Carretera al Atlántico</p>
+                    <p><b>Teléfono:</b> (502) 2333-3333</p>
+                    <p><b>Email:</b> info@domcati.com</p>
+                    <br>
+                    <h3>Nuestras Redes y Proyectos</h3>
+                    <p>
+                        <ul class="features-list">
+                            <li><a href="https://www.instagram.com/domca.support?igsh=MzY0MDM4dmdhbHEw">Instagram</a></li>
+                            <li><a href="https://www.facebook.com/share/1FNAu6151D/">Facebook</a></li>
+                            <li><a href="https://www.linkedin.com/in/ingpablortiz/">LinkedIn</a></li>
+                            <li><a href="https://www.youtube.com/@domcatisa">YouTube</a></li>
+                            <li><a href="https://asygasesoriagt.com/home#contact">Negocio Paralelo: AsyGas Asesoría</a></li>
+                        </ul>
+                    </p>
+                </div>
+                
+                <div class="animate-on-scroll">
+                    <form id="contactForm">
+                        <div class="about-grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div>
+                                <label for="nombre" class="sr-only">Nombre Completo</label>
+                                <input type="text" id="nombre" name="nombre" placeholder="Nombre Completo" required style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;">
+                            </div>
+                            <div>
+                                <label for="email" class="sr-only">Correo Electrónico</label>
+                                <input type="email" id="email" name="email" placeholder="Correo Electrónico" required style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;">
+                            </div>
+                        </div>
+                        <br>
+                        <div>
+                            <label for="asunto" class="sr-only">Asunto</label>
+                            <input type="text" id="asunto" name="asunto" placeholder="Asunto" required style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;">
+                        </div>
+                        <br>
+                        <div>
+                            <label for="mensaje" class="sr-only">Mensaje</label>
+                            <textarea id="mensaje" name="mensaje" rows="5" placeholder="Tu mensaje..." required style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;"></textarea>
+                        </div>
+                        <br>
+                        <button type="submit">Enviar Mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+    
+    <section id="faq" class="section" style="padding-top: 2rem;">
+        <div class="container faq-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-badge">Preguntas Frecuentes</div>
+                <h2 class="section-title">Respuestas a tus Inquietudes</h2>
+                <p class="section-subtitle">Encuentra respuestas rápidas a las preguntas más comunes sobre nuestros servicios.</p>
+            </div>
+            
+            <div class="faq-list">
+                <div class="faq-item animate-on-scroll">
+                    <div class="faq-question">
+                        <h3>¿Qué tipo de servicios ofrecen?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Ofrecemos una amplia gama de servicios, incluyendo desarrollo de software a medida, ciberseguridad, desarrollo de aplicaciones móviles, licenciamiento de software y soporte técnico.</p>
+                    </div>
+                </div>
+                <div class="faq-item animate-on-scroll">
+                    <div class="faq-question">
+                        <h3>¿Están actualizados con las últimas tecnologías?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sí, la **innovación** es uno de nuestros valores fundamentales. Estamos en constante aprendizaje y nos actualizamos para ofrecer las mejores y más recientes soluciones tecnológicas del mercado.</p>
+                    </div>
+                </div>
+                <div class="faq-item animate-on-scroll">
+                    <div class="faq-question">
+                        <h3>¿Cómo puedo solicitar un presupuesto?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Puedes contactarnos a través de nuestro formulario en la sección de Contacto, enviarnos un correo electrónico o llamarnos directamente. Nuestro equipo te asesorará con gusto y te proporcionará una cotización sin compromiso.</p>
+                    </div>
+                </div>
+                <div class="faq-item animate-on-scroll">
+                    <div class="faq-question">
+                        <h3>¿Tienen experiencia en mi industria?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Con **más de diez años de presencia en el mercado**, hemos brindado soluciones a clientes de diversas industrias, lo que nos permite entender sus desafíos y ofrecer soluciones a la medida.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <section id="carreras" class="section" style="padding-top: 2rem;">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-badge">Únete al Equipo</div>
+                <h2 class="section-title">Carreras en DOM'CA TI Support</h2>
+                <p class="section-subtitle">Únete a un equipo de profesionales apasionados por la tecnología y la innovación.</p>
+            </div>
+            <div class="job-openings-grid">
+                <div class="job-card animate-on-scroll">
+                    <h3>Desarrollador de Software</h3>
+                    <p>Buscamos un desarrollador experimentado para unirse a nuestro equipo de proyectos a medida. Se requiere experiencia en lenguajes como Python, Java o C#.</p>
+                    <a href="#contacto" class="btn-primary" style="padding: 0.75rem 1.5rem;">Aplicar Ahora</a>
+                </div>
+                <div class="job-card animate-on-scroll">
+                    <h3>Especialista en Ciberseguridad</h3>
+                    <p>Profesional con conocimientos en seguridad de redes, protección de datos y respuesta a incidentes. Certificaciones son un plus.</p>
+                    <a href="#contacto" class="btn-primary" style="padding: 0.75rem 1.5rem;">Aplicar Ahora</a>
+                </div>
+                <div class="job-card animate-on-scroll">
+                    <h3>Analista de Soporte Técnico</h3>
+                    <p>Buscamos a un analista proactivo y con excelentes habilidades de resolución de problemas para unirse a nuestro equipo de soporte.</p>
+                    <a href="#contacto" class="btn-primary" style="padding: 0.75rem 1.5rem;">Aplicar Ahora</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <hr>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>DOM'CA TI Support S.A.</h3>
+                <p>Tu socio estratégico en soluciones de tecnología de la información. Comprometidos con la excelencia y la innovación.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/domca.support?igsh=MzY0MDM4dmdhbHEw" aria-label="Síguenos en Instagram">📸</a>
+                    <a href="https://www.facebook.com/share/1FNAu6151D/" aria-label="Síguenos en Facebook">📘</a>
+                    <a href="https://www.linkedin.com/in/ingpablortiz/" aria-label="Síguenos en LinkedIn">🔗</a>
+                    <a href="https://www.youtube.com/@domcatisa" aria-label="Síguenos en YouTube">▶️</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Servicios</h3>
+                <p><a href="#soluciones">Desarrollo de Software</a></p>
+                <p><a href="#soluciones">Ciberseguridad</a></p>
+                <p><a href="#soluciones">Soporte Técnico</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces Útiles</h3>
+                <p><a href="#nosotros">Acerca de Nosotros</a></p>
+                <p><a href="#testimonios">Testimonios</a></p>
+                <p><a href="#faq">Preguntas Frecuentes</a></p>
+                <p><a href="#carreras">Carreras</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Contáctanos</h3>
+                <p>Dirección: Colonia Hermano Pedro, 3a Avenida 28-88, Zona 25, Guatemala, Guatemala, Kilómetro 14.5 Carretera al Atlántico</p>
+                <p>Email: <a href="mailto:info@domcati.com">info@domcati.com</a></p>
+                <p>Teléfono: <a href="tel:+50223333333">(502) 2333-3333</a></p>
+                <p>Negocio Paralelo: <a href="https://asygasesoriagt.com/home#contact">AsyGas Asesoría</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DOM'CA TI Support S.A. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <div class="cookie-banner" id="cookie-banner">
+        <p>Este sitio web utiliza cookies para mejorar tu experiencia de navegación. Al continuar, aceptas el uso de cookies de acuerdo con nuestra política.</p>
+        <a href="#politicas" style="text-decoration: underline;">Política de Privacidad</a>
+        <button id="accept-cookies">Aceptar</button>
+    </div>
+    
+    <div class="chat-menu-container" id="chat-menu">
+        <div class="chat-menu-header">
+            <img src="in-logo.png" alt="Logotipo de Intechsys" class="chat-logo">
+            <div class="chat-info">
+                <h4 class="chat-company">Intechsys</h4>
+                <p class="chat-response-time">Por lo general, respondemos en unos minutos</p>
+            </div>
+        </div>
+        <div class="chat-window" id="chat-window">
+            <div class="chat-message-bubble incoming">
+                <img src="in-logo.png" alt="Logotipo de Intechsys" class="chat-logo-sm">
+                <p class="chat-message">Bienvenido de nuevo a INTECHSYS. Soy Alejandra. Avísame si necesitas ayuda.</p>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" placeholder="Pregúntame lo que quieras...">
+                <button aria-label="Enviar mensaje">➤</button>
+            </div>
+        </div>
+        <button class="chat-toggle-btn" id="chat-toggle-btn" aria-label="Abrir chat">
+            <span class="close-icon" style="display: none;">✕</span>
+            <span class="chat-icon">💬</span>
+        </button>
+    </div>
+
+    <script>
+        // Smooth scroll para los enlaces de navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Contador de estadísticas
+        const stats = document.querySelectorAll('.stat-number');
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5 // Trigger when 50% of the element is visible
+        };
+
+        function startCounter(el) {
+            const target = parseInt(el.dataset.target, 10);
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    el.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    el.textContent = Math.ceil(current);
+                }
+            }, 10);
+        }
+
+        const statsObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    startCounter(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        stats.forEach(stat => statsObserver.observe(stat));
+
+        // Animación de aparición al hacer scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            elements.forEach(el => {
+                if (el.getBoundingClientRect().top < window.innerHeight - 100) {
+                    el.classList.add('animated');
+                }
+            });
+        }
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+
+        // Funcionalidad del banner de cookies
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!getCookie('cookies_accepted')) {
+                document.getElementById('cookie-banner').classList.add('show');
+            }
+
+            document.getElementById('accept-cookies').addEventListener('click', function() {
+                setCookie('cookies_accepted', 'true', 365);
+                document.getElementById('cookie-banner').classList.remove('show');
+            });
+
+            animateOnScroll();
+            
+            document.querySelectorAll('.faq-question').forEach(button => {
+                button.addEventListener('click', () => {
+                    const item = button.parentElement.parentElement;
+                    item.classList.toggle('active');
+                });
+            });
+
+            // Lógica para el menú de chat
+            const chatToggleBtn = document.getElementById('chat-toggle-btn');
+            const chatMenu = document.getElementById('chat-menu');
+            const closeIcon = chatToggleBtn.querySelector('.close-icon');
+            const chatIcon = chatToggleBtn.querySelector('.chat-icon');
+
+            chatToggleBtn.addEventListener('click', function() {
+                chatMenu.classList.toggle('active');
+                closeIcon.style.display = chatMenu.classList.contains('active') ? 'inline' : 'none';
+                chatIcon.style.display = chatMenu.classList.contains('active') ? 'none' : 'inline';
+            });
+        });
+    </script>
+</body>
+</html>
